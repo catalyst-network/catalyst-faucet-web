@@ -18,6 +18,15 @@ type JsonValue =
   | JsonValue[]
   | { [key: string]: JsonValue };
 
+function getPathString(obj: unknown, path: string[]): string | undefined {
+  let cur: unknown = obj;
+  for (const key of path) {
+    if (!cur || typeof cur !== "object") return undefined;
+    cur = (cur as Record<string, unknown>)[key];
+  }
+  return typeof cur === "string" && cur.trim() ? cur : undefined;
+}
+
 function getString(obj: unknown, keys: string[]): string | undefined {
   if (!obj || typeof obj !== "object") return undefined;
   const rec = obj as Record<string, unknown>;
@@ -64,6 +73,16 @@ async function readJsonOrText(res: Response): Promise<{ json?: JsonValue; text?:
   }
 }
 
+function getErrorMessage(json: unknown, text: string | undefined, status: number, fallback: string): string {
+  const message =
+    getPathString(json, ["error", "message"]) ??
+    getPathString(json, ["error", "error", "message"]) ??
+    getString(json, ["message", "detail"]) ??
+    getString(json, ["error"]) ??
+    text;
+  return (message && message.trim()) ? message : `${fallback} (${status})`;
+}
+
 export async function fetchFaucetInfo(baseUrl: string): Promise<FaucetInfo> {
   const res = await fetch(`${baseUrl}/v1/info`, {
     method: "GET",
@@ -73,11 +92,7 @@ export async function fetchFaucetInfo(baseUrl: string): Promise<FaucetInfo> {
 
   const { json, text } = await readJsonOrText(res);
   if (!res.ok) {
-    const message =
-      getString(json, ["error", "message", "detail"]) ??
-      text ??
-      `Failed to fetch faucet info (${res.status})`;
-    throw new Error(message);
+    throw new Error(getErrorMessage(json, text, res.status, "Failed to fetch faucet info"));
   }
 
   const amount =
@@ -109,11 +124,7 @@ export async function requestFaucetFunds(params: {
 
   const { json, text } = await readJsonOrText(res);
   if (!res.ok) {
-    const message =
-      getString(json, ["error", "message", "detail"]) ??
-      text ??
-      `Request failed (${res.status})`;
-    throw new Error(message);
+    throw new Error(getErrorMessage(json, text, res.status, "Request failed"));
   }
 
   const txHash =
