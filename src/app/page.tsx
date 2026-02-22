@@ -1,6 +1,5 @@
 "use client";
 
-import { isAddress } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { fetchFaucetInfo, requestFaucetFunds, type FaucetInfo } from "@/lib/faucetApi";
@@ -39,7 +38,9 @@ export default function Home() {
   const [status, setStatus] = useState<Status>({ kind: "idle" });
 
   const normalizedAddress = address.trim();
-  const addressValid = normalizedAddress.length > 0 && isAddress(normalizedAddress);
+  const addressValid =
+    normalizedAddress.length > 0 &&
+    /^0x[0-9a-fA-F]{64}$/.test(normalizedAddress);
   const explorerTxUrlTemplate =
     config?.explorerTxUrlTemplate ?? "https://explorer.catalystnet.org/tx/<txHash>";
 
@@ -215,7 +216,7 @@ export default function Home() {
                 />
               </div>
               <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
-                Enter an Ethereum-style address on Catalyst testnet.
+                Enter a Catalyst address (0x + 32-byte pubkey hex) on Catalyst testnet.
               </p>
             </div>
 
