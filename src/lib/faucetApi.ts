@@ -27,6 +27,15 @@ function getPathString(obj: unknown, path: string[]): string | undefined {
   return typeof cur === "string" && cur.trim() ? cur : undefined;
 }
 
+function getPathValue(obj: unknown, path: string[]): unknown {
+  let cur: unknown = obj;
+  for (const key of path) {
+    if (!cur || typeof cur !== "object") return undefined;
+    cur = (cur as Record<string, unknown>)[key];
+  }
+  return cur;
+}
+
 function getString(obj: unknown, keys: string[]): string | undefined {
   if (!obj || typeof obj !== "object") return undefined;
   const rec = obj as Record<string, unknown>;
@@ -80,7 +89,21 @@ function getErrorMessage(json: unknown, text: string | undefined, status: number
     getString(json, ["message", "detail"]) ??
     getString(json, ["error"]) ??
     text;
-  return (message && message.trim()) ? message : `${fallback} (${status})`;
+  const base = (message && message.trim()) ? message : `${fallback} (${status})`;
+
+  const details = getPathValue(json, ["error", "details"]);
+  if (!details || typeof details !== "object") return base;
+
+  const hint = (details as Record<string, unknown>)["hint"];
+  if (typeof hint === "string" && hint.trim()) return `${base}\n${hint.trim()}`;
+
+  const receivedKeys = (details as Record<string, unknown>)["receivedKeys"];
+  if (Array.isArray(receivedKeys) && receivedKeys.every((k) => typeof k === "string")) {
+    const keys = (receivedKeys as string[]).slice(0, 12).join(", ");
+    return `${base}\nReceived keys: ${keys}${(receivedKeys as string[]).length > 12 ? ", …" : ""}`;
+  }
+
+  return base;
 }
 
 export async function fetchFaucetInfo(baseUrl: string): Promise<FaucetInfo> {
