@@ -120,17 +120,26 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-950 dark:bg-black dark:text-zinc-50">
+    <div className="min-h-screen bg-zinc-50 text-zinc-950 dark:bg-[#05060a] dark:text-zinc-50">
       <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
         <header className="mb-8">
           <div className="flex items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight">
-                Catalyst Faucet
-              </h1>
-              <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                Request testnet KAT for development and testing.
-              </p>
+            <div className="flex items-center gap-3">
+              <img
+                src="/catalyst-logo.png"
+                alt="Catalyst"
+                width={28}
+                height={28}
+                className="h-7 w-7"
+              />
+              <div>
+                <h1 className="text-2xl font-semibold tracking-tight">
+                  Catalyst Faucet
+                </h1>
+                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                  Request testnet KAT for development and testing.
+                </p>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-200">
@@ -143,7 +152,7 @@ export default function Home() {
           </div>
         </header>
 
-        <main className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+        <main className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-[#070914]">
           <div className="border-b border-zinc-200 px-6 py-5 dark:border-zinc-800">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div className="text-sm text-zinc-600 dark:text-zinc-400">

@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Catalyst Faucet",
   description: "Request Catalyst testnet KAT for development and testing.",
+  icons: {
+    icon: [{ url: "/catalyst-logo.png" }],
+  },
 };
 
 export default function RootLayout({

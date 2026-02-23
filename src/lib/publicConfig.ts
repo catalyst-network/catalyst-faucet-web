@@ -1,16 +1,14 @@
 const DEFAULT_CHAIN_ID = "0xbf8457c";
 
-function requiredEnv(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`Missing required env var: ${name}`);
-  }
-  return value;
+function required(value: string | undefined, name: string): string {
+  const v = value?.trim();
+  if (!v) throw new Error(`Missing required env var: ${name}`);
+  return v;
 }
 
-function optionalEnv(name: string): string | undefined {
-  const value = process.env[name];
-  return value && value.trim() ? value : undefined;
+function optional(value: string | undefined): string | undefined {
+  const v = value?.trim();
+  return v ? v : undefined;
 }
 
 function normalizeChainId(value: string | number): string {
@@ -40,19 +38,21 @@ export type PublicConfig = {
 };
 
 export function getPublicConfig(): PublicConfig {
-  const faucetApiBaseUrl = requiredEnv("NEXT_PUBLIC_FAUCET_API_BASE_URL").replace(
+  // IMPORTANT: these must be referenced statically so Next can inline NEXT_PUBLIC_* into the client bundle.
+  // Default to same-origin `/api` when running behind the recommended reverse proxy.
+  const faucetApiBaseUrl = (optional(process.env.NEXT_PUBLIC_FAUCET_API_BASE_URL) ?? "/api").replace(
     /\/+$/,
     "",
   );
 
   return {
     faucetApiBaseUrl,
-    turnstileSiteKey: requiredEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY"),
-    networkName: optionalEnv("NEXT_PUBLIC_NETWORK_NAME") ?? "Catalyst Testnet",
+    turnstileSiteKey: required(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY, "NEXT_PUBLIC_TURNSTILE_SITE_KEY"),
+    networkName: optional(process.env.NEXT_PUBLIC_NETWORK_NAME) ?? "Catalyst Testnet",
     explorerTxUrlTemplate:
-      optionalEnv("NEXT_PUBLIC_EXPLORER_TX_URL_TEMPLATE") ??
+      optional(process.env.NEXT_PUBLIC_EXPLORER_TX_URL_TEMPLATE) ??
       "https://explorer.catalystnet.org/tx/<txHash>",
-    chainIdAllowlist: parseAllowlist(optionalEnv("NEXT_PUBLIC_ALLOWED_CHAIN_IDS")),
+    chainIdAllowlist: parseAllowlist(optional(process.env.NEXT_PUBLIC_ALLOWED_CHAIN_IDS)),
   };
 }
 
