@@ -120,7 +120,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-950 dark:bg-[#05060a] dark:text-zinc-50">
+    <div className="min-h-screen bg-transparent text-zinc-950 dark:text-zinc-50">
       <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
         <header className="mb-8">
           <div className="flex items-center justify-between gap-4">
@@ -152,7 +152,7 @@ export default function Home() {
           </div>
         </header>
 
-        <main className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-[#070914]">
+        <main className="rounded-2xl border border-zinc-200 bg-white/95 shadow-sm backdrop-blur dark:border-zinc-800 dark:bg-[#070914]/90">
           <div className="border-b border-zinc-200 px-6 py-5 dark:border-zinc-800">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div className="text-sm text-zinc-600 dark:text-zinc-400">
