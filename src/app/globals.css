@@ -19,8 +19,22 @@
   }
 }
 
+html,
 body {
-  background: var(--background);
+  height: 100%;
+}
+
+body {
+  /* Branded backdrop (light mode): subtle glows + gentle gradient. */
+  background-color: var(--background);
+  background-image:
+    radial-gradient(900px circle at 12% 18%, rgba(120, 80, 255, 0.10), transparent 60%),
+    radial-gradient(900px circle at 88% 22%, rgba(0, 210, 255, 0.08), transparent 58%),
+    radial-gradient(900px circle at 70% 92%, rgba(0, 255, 190, 0.06), transparent 55%),
+    linear-gradient(180deg, #ffffff 0%, #f7f8ff 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
@@ -36,5 +50,6 @@ body {
       linear-gradient(180deg, #05060a 0%, #04050a 100%);
     background-attachment: fixed;
     background-repeat: no-repeat;
+    background-size: cover;
   }
 }
